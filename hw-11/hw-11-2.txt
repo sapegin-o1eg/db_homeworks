@@ -1,0 +1,78 @@
+/*
+	Практическое задание по теме “NoSQL”
+	
+	1)	В базе данных Redis подберите коллекцию для подсчета 
+		посещений с определенных IP-адресов.
+	2)	При помощи базы данных Redis решите задачу поиска 
+		имени пользователя по электронному адресу и наоборот, 
+		поиск электронного адреса пользователя по его имени.
+	3)	Организуйте хранение категорий и товарных позиций 
+		учебной базы данных shop в СУБД MongoDB.
+*/
+
+
+/*	1
+127.0.0.1:6379> HINCRBY ipstat 192.168.0.1 1
+(integer) 1
+127.0.0.1:6379> HINCRBY ipstat 192.168.0.2 1
+(integer) 1
+127.0.0.1:6379> HINCRBY ipstat 192.168.0.2 1
+(integer) 2
+127.0.0.1:6379> HGETALL ipstat
+1) "192.168.0.1"
+2) "1"
+3) "192.168.0.2"
+4) "2"
+127.0.0.1:6379> HGET ipstat 192.168.0.2
+"2"
+127.0.0.1:6379> 
+*/
+
+
+/*	2
+127.0.0.1:6379> HMSET users:user1:user1@gmail.com name user1 email user1@gmail.com
+OK
+127.0.0.1:6379> HMSET users:user2:user2@gmail.com name user2 email user2@gmail.com
+OK
+127.0.0.1:6379> KEYS users:*
+1) "users:user1:user1@gmail.com"
+2) "users:user2:user2@gmail.com"
+127.0.0.1:6379> KEYS users:*:user1@gmail.com
+1) "users:user1:user1@gmail.com"
+127.0.0.1:6379> hget users:user1:user1@gmail.com name
+"user1"
+127.0.0.1:6379> KEYS users:user2:*
+1) "users:user2:user2@gmail.com"
+127.0.0.1:6379> HGET users:user2:user2@gmail.com email
+"user2@gmail.com"
+127.0.0.1:6379> 
+*/
+
+
+/*	3
+> db.catalogs.insert({cat_name: 'Процессоры'})
+WriteResult({ "nInserted" : 1 })
+> db.catalogs.insert({cat_name: 'Материнские платы'})
+WriteResult({ "nInserted" : 1 })
+> db.catalogs.find()
+{ "_id" : ObjectId("5e771b1d1e71026eff5d0295"), "cat_name" : "Процессоры" }
+{ "_id" : ObjectId("5e771b241e71026eff5d0296"), "cat_name" : "Материнские платы" }
+> db.products.insert({name: 'Intel Core i3-8100',
+... description: 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.',
+... price: 7890,
+... catalog_id: ObjectId("5e771b1d1e71026eff5d0295"),
+... created_at: ObjectId().getTimestamp(),
+... updated_at: ObjectId().getTimestamp()})
+WriteResult({ "nInserted" : 1 })
+> db.products.find().pretty()
+{
+	"_id" : ObjectId("5e771cff1e71026eff5d029d"),
+	"name" : "Intel Core i3-8100",
+	"description" : "Процессор для настольных персональных компьютеров, основанных на платформе Intel.",
+	"price" : 7890,
+	"catalog_id" : ObjectId("5e771b1d1e71026eff5d0295"),
+	"created_at" : ISODate("2020-03-22T08:08:31Z"),
+	"updated_at" : ISODate("2020-03-22T08:08:31Z")
+}
+>
+*/
